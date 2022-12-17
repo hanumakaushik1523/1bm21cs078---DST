@@ -1,115 +1,111 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-
+int count = 0;
 struct node{
-    int info;
-    struct node* link;
+    int data;
+    struct node* next;
 };
 
-struct node* start = NULL;//global variable
+struct node* head = NULL;
 
-void display()
-{
-    struct node* temp;
-
-    if (start == NULL)
-        printf("\nList is empty\n");
-
-    else
-        {
-        temp = start;
-        while (temp != NULL)
-            {
-            printf("Element = %d\n", temp->info);
-            temp = temp->link;
-            }
-        }
+struct node* create_node(){
+    struct node* temp=(struct node*)malloc(sizeof(struct node));
+    printf("Enter Number\n");
+    scanf("%d",&(temp->data));
+    temp->next=NULL;
+    return temp;
 }
 
-void insertFront()
-{
-    int data;
-    struct node* temp;
-    temp = malloc(sizeof(struct node));
-    printf("\nEnter number to"
-           " be inserted : ");
-    scanf("%d", &data);
-    temp->info = data;
-
-    temp->link = start;
-    start = temp;
-}
-
-void insertEnd()
-{
-    int data;
-    struct node *temp, *head;
-    temp = malloc(sizeof(struct node));
-
-    printf("\nEnter number to be inserted : ");
-    scanf("%d", &data);
-
-    temp->link = 0;
-    temp->info = data;
-    head = start;
-    while (head->link != NULL) {
-        head = head->link;
+void add_front(){
+    if(head==NULL){
+        head=create_node();
+    }else{
+        struct node* temp=create_node();
+        temp->next=head;
+        head=temp;
     }
-    head->link = temp;
 }
 
-
-void insertPosition()
-{
-    struct node *temp, *newnode;
-    int pos, data, i = 1;
-    newnode = malloc(sizeof(struct node));
-
-    printf("\nEnter position and data :");
-    scanf("%d %d", &pos, &data);
-
-    temp = start;
-    newnode->info = data;
-    newnode->link = 0;
-    while (i < pos - 1) {
-        temp = temp->link;
-        i++;
+void add_end(){
+    if(head==NULL){
+        head=create_node();
+    }else{
+        struct node* temp=head;
+        while(temp->next!=NULL)
+        temp=temp->next;
+        temp->next=create_node();
     }
-    newnode->link = temp->link;
-    temp->link = newnode;
 }
 
-int main()
-{
-    while(1){
+void add_between(int pos){
+    if(head==NULL){
+        printf("There are no elements exist.New list being created\n");
+        head=create_node();
+    }else if(pos > count){
+      printf("Enter Valid Position\n");
+    }else{
+        struct node* temp=head;
+        while(--pos!=1)
+        temp=temp->next;
+        struct node* temp1=temp->next;
+        temp->next=create_node();
+        (temp->next)->next=temp1;
+    }
+}
+
+void display(){
+    if(head==NULL){
+        printf("No elements have been inserted");
+    }else{
+    struct node* i=head;
+    while (i->next!=NULL)
+    {
+        printf("%d  ",i->data);
+        i=i->next;
+    }
+    printf("%d  ",i->data);
+    printf("\n");
+    }
+}
+
+void main(){
     int choice;
-        printf("1. Insert At First Place");
-        printf("\n2. Insert At Last Place");
-        printf("\n3. Insert At Any Place");
-        printf("\n4. Display The entered Elements");
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
-
+    printf("1:At the Beginning\n2:End\n3.Enter element at any position\n4.Display the Elements\n5.Exit\n");
+    while (1)
+    {
+        printf("Enter choice\n");
+        scanf("%d",&choice);
         switch (choice)
         {
-        case 1: insertFront();
-                break;
+        case 1:
+            add_front();
+            count++;
+            break;
 
-        case 2: insertEnd();
-                break;
+        case 2:
+            add_end();
+            count++;
+            break;
 
-        case 3: insertPosition();
-                break;
+        case 3:
+            printf("Enter position of element to be inserted\n");
+            int p;
+            scanf("%d",&p);
+            add_between(p);
+            count++;
+            break;
 
-        case 4: display();
-                break;
+        case 4:
+            display();
+            break;
 
-        case 5: exit(1);
-                break;
+        case 5:
+            exit(0);
 
-        default: printf("Wrong choice!!!!!!\n");
+        default:printf("Invalid choice");
+            break;
         }
+
     }
-    return 0;
 }
